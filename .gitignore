@@ -1,2 +1,7 @@
-uploads/
-output/
+uploads/*
+output/lvl0/*
+output/lvl1/*
+output/lvl2/*
+output/lvl3/*
+output/lvl4/*
+output/lvl5/*
