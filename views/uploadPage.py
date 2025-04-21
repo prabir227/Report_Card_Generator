@@ -3,7 +3,8 @@ import os
 import shutil
 from PIL import Image, ImageTk
 from tkinter import filedialog, messagebox
-class UploadPage:
+from views.inputFormPage import InputFormPage
+class UploadPage(tk.Frame):
     def browse_file(self):
         file_path = filedialog.askopenfilename(
             title="Select Excel File",
@@ -26,7 +27,9 @@ class UploadPage:
                 self.selected_file = destination_path
                 messagebox.showinfo("File Uploaded", "Your file has been uploaded successfully!")
                 print("Uploaded and renamed file:", destination_path)
-                
+                for widget in self.root.winfo_children():
+                    widget.destroy()
+                InputFormPage(self.root)
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to upload and rename file: {str(e)}")
         else:
@@ -34,6 +37,7 @@ class UploadPage:
             messagebox.showwarning("No File", "No file was selected.")
 
     def __init__(self, root):
+        super().__init__(root)
         self.root = root
         self.root.title("Upload Page")
         self.root.configure(bg="#FFDD61")
