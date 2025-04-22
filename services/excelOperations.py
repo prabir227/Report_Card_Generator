@@ -276,7 +276,7 @@ class ExcelOperations:
             if(lvl==5):
                 self.sstWriter(sheet,row,total)
 
-            self.__doc.save(f"output/lvl{lvl}/{name}.docx")
+            self.__doc.save(f"output/lvl{lvl}/lvl{lvl}doc/{name}.docx")
 
     def docxWriter(self):
         

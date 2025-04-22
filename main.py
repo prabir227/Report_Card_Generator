@@ -6,11 +6,6 @@ class ReportCardGeneratorApp(tk.Tk):
         self.upload_page=UploadPage(self)
 
 
-# def run_app():
-#     root = tk.Tk()
-#     UploadPage(root)
-#     root.mainloop()
-
 if __name__ == "__main__":
     app = ReportCardGeneratorApp()
     app.mainloop()
