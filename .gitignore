@@ -11,4 +11,5 @@ output/lvl4/lvl4pdf/*
 output/lvl5/lvl5doc/*
 output/lvl5/lvl5pdf/*
 output/merged/*
+uploads/*
 test.py
