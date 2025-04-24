@@ -1,8 +1,10 @@
 from docx2pdf import convert
 from PyPDF2 import PdfMerger
 import os
+from services.zipOperations import ZipOperations
 class PdfOperations:
-    def __init__(self):
+    def __init__(self,output_directory):
+        self.__output_directory = output_directory
         
         self.generate_pdf()
         self.merge_pdf()
@@ -26,3 +28,4 @@ class PdfOperations:
                 merger.append(os.path.join(input, pdf))
             merger.write(output)
             merger.close()
+        ZipOperations(self.__output_directory)

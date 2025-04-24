@@ -4,7 +4,7 @@ from tkinter import messagebox
 from services.excelOperations import ExcelOperations
 from services.pdfOperations import PdfOperations
 class InputFormPage(tk.Frame):
-    def __init__(self,root):
+    def __init__(self,root,output_directory):
         super().__init__(root)
         self.root = root
         self.root.title("Input Form Page")
@@ -12,6 +12,7 @@ class InputFormPage(tk.Frame):
         self.root.minsize(700, 650)
         self.root.maxsize(700, 650)
 
+        self.__output_directory = output_directory
         self.__eng1 = tk.StringVar()
         self.__eng2 = tk.StringVar()
         self.__eng3 = tk.StringVar()
@@ -166,7 +167,7 @@ class InputFormPage(tk.Frame):
             int(self.__level4total.get()), int(self.__level5total.get()),
             self.__studyCentre.get())
 
-            PdfOperations()
+            PdfOperations(self.__output_directory)
 
 
         
