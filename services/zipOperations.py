@@ -19,6 +19,7 @@ class ZipOperations:
                     file_path = os.path.join(root, file)
                     arcname = os.path.relpath(file_path, output_dir)  # keep folder structure
                     zipf.write(file_path, arcname)
+        
 
 if __name__ == "__main__":
     zip_operations = ZipOperations("C:/Users/PRABIR GHOSH/Desktop/result/lvl1")

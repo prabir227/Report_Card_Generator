@@ -104,7 +104,3 @@ class UploadPage(tk.Frame):
         else:
             self.__output_directory = None
             messagebox.showwarning("No Directory", "No directory was selected.")
-
-    
-
-
