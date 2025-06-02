@@ -1,8 +1,10 @@
 import tkinter as tk
 from PIL import Image, ImageTk
+import os, sys
 from tkinter import messagebox
 from services.excelOperations import ExcelOperations
 from services.pdfOperations import PdfOperations
+from services.deleteOperations import DeleteOperations
 class InputFormPage(tk.Frame):
     def __init__(self,root,output_directory):
         super().__init__(root)
@@ -111,7 +113,7 @@ class InputFormPage(tk.Frame):
         tk.Entry(self.root, font=entry_font, bg=entry_bg, width=10, textvariable=self.__name)\
             .grid(row=16, column=1, padx=padx_entry, pady=pady_entry)
         #logo
-        logo = Image.open("assets/hhfc-logo.png")
+        logo = Image.open(self.resource_path("assets/hhfc-logo.png"))
         logo = logo.resize((80, 50))
         self.image = ImageTk.PhotoImage(logo)
         logo_label = tk.Label(self.root, image=self.image, bg=bg_color).grid(row=14, column=5, sticky="se", padx=(0, 0), pady=(0, 15),columnspan=2,rowspan=2)
@@ -121,6 +123,18 @@ class InputFormPage(tk.Frame):
         tk.Button(self.root, text="Submit", font=font_bold, bg="#FF9800", fg="white",command=self.submit)\
             .grid(row=14, column=5, columnspan=2, pady=(10, 10),rowspan=4,sticky="se",padx=(20,10))
     
+    def resource_path(self,relative_path):
+        """
+        Get the absolute path to a resource, whether running in development or as a PyInstaller .exe.
+        """
+        try:
+            # PyInstaller creates a temp folder and stores path in _MEIPASS
+            base_path = sys._MEIPASS
+        except AttributeError:
+            # Running normally (not as a .exe)
+            base_path = os.path.abspath(".")
+
+        return os.path.join(base_path, relative_path)
     def check(self):
         fields = [
             self.__eng1, self.__eng2, self.__eng3,
@@ -168,15 +182,8 @@ class InputFormPage(tk.Frame):
             self.__studyCentre.get())
 
             PdfOperations(self.__output_directory)
-
+            DeleteOperations()
             messagebox.showinfo("Operations Successful",f"Your files have been generated successfully and saved in {self.__output_directory}")
-
-
-        
-        
-
-        
-
 
 if __name__ == "__main__":
     root = tk.Tk()

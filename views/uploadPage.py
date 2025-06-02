@@ -1,5 +1,5 @@
 import tkinter as tk
-import os
+import os, sys
 import shutil
 from PIL import Image, ImageTk
 from tkinter import filedialog, messagebox
@@ -17,8 +17,9 @@ class UploadPage(tk.Frame):
         header_frame = tk.Frame(self.root, bg="#FFDD61")
         header_frame.pack(side="top", fill="x", padx=20, pady=20)
         self.__uploaded_file = False
+        self.__added_directory = False
         # === Logo on the Left ===
-        logo = Image.open("assets/hhfc-logo.png")
+        logo = Image.open(self.resource_path("assets/hhfc-logo.png"))
         logo = logo.resize((110, 80))
         self.image = ImageTk.PhotoImage(logo)
 
@@ -55,11 +56,24 @@ class UploadPage(tk.Frame):
         footer_label.pack(side="left",expand=True)
 
         # Logo on the Right
-        logo = Image.open("assets/hhfc-logo.png")
+        logo = Image.open(self.resource_path("assets/hhfc-logo.png"))
         logo = logo.resize((50, 30))  # Smaller logo for footer
         self.footer_logo = ImageTk.PhotoImage(logo)
         logo_label = tk.Label(footer, image=self.footer_logo, bg="#FFDD61")
         logo_label.pack(side="right", padx=20)
+
+    def resource_path(self,relative_path):
+        """
+        Get the absolute path to a resource, whether running in development or as a PyInstaller .exe.
+        """
+        try:
+            # PyInstaller creates a temp folder and stores path in _MEIPASS
+            base_path = sys._MEIPASS
+        except AttributeError:
+            # Running normally (not as a .exe)
+            base_path = os.path.abspath(".")
+
+        return os.path.join(base_path, relative_path)
 
     def browse_file(self):
         file_path = filedialog.askopenfilename(
@@ -84,6 +98,10 @@ class UploadPage(tk.Frame):
                 messagebox.showinfo("File Uploaded", "Your file has been uploaded successfully!")
                 print("Uploaded and renamed file:", destination_path)
                 self.__uploaded_file = True    
+                if self.__added_directory:
+                    for widget in self.root.winfo_children():
+                        widget.destroy()
+                    InputFormPage(self.root,self.__output_directory)
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to upload and rename file: {str(e)}")
         else:
@@ -97,6 +115,7 @@ class UploadPage(tk.Frame):
             # Save the selected directory path to a variable or use it as needed
             self.__output_directory = folder_path
             messagebox.showinfo("Directory Selected", f"Selected directory: {folder_path}")
+            self.__added_directory = True
             if self.__uploaded_file:
                 for widget in self.root.winfo_children():
                     widget.destroy()

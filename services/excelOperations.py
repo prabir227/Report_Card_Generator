@@ -1,6 +1,7 @@
 from docx import Document
 from openpyxl import load_workbook
 from docx.shared import Pt, Inches
+import os, sys
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 class ExcelOperations:
     def __init__(self,lvl0Start, lvl0End, lvl1Start, lvl1End, lvl2Start, lvl2End, lvl3Start, lvl3End, lvl4Start, lvl4End, lvl5Start, lvl5End, date="15/06/28",eng1="C", eng2="K", eng3="S", hin1="D", hin2="L", hin3="T", math1="E", math2="M", math3="U", sst1="G", sst2="O", sst3="W", evs1="F", evs2="N", evs3="V", name="A",totalLvl0=150, totalLvl1=150, totalLvl2=150, totalLvl3=150, totalLvl4=150, totalLvl5=200 , centre="Boring Road"):
@@ -40,13 +41,24 @@ class ExcelOperations:
         self.__lvl5End = lvl5End
         self.__date = date
         self.__name = name
-        self.__doc = Document("assets/resultFormat.docx")
+        self.__doc = Document(self.resource_path("assets/resultFormat.docx"))
         self.__result = load_workbook("uploads/uploaded.xlsx")
         self.__marksTable = self.__doc.tables[1]
         self.__nameTable = self.__doc.tables[0]
 
         self.docxWriter()
+    def resource_path(self,relative_path):
+        """
+        Get the absolute path to a resource, whether running in development or as a PyInstaller .exe.
+        """
+        try:
+            # PyInstaller creates a temp folder and stores path in _MEIPASS
+            base_path = sys._MEIPASS
+        except AttributeError:
+            # Running normally (not as a .exe)
+            base_path = os.path.abspath(".")
 
+        return os.path.join(base_path, relative_path)
     def write_study_centre(self, studyCentre):
         para = self.__doc.paragraphs[2]
         for run in para.runs:
@@ -278,8 +290,27 @@ class ExcelOperations:
 
             self.__doc.save(f"output/lvl{lvl}/lvl{lvl}doc/{name}.docx")
 
+    def createDir(self):
+        # Base directory
+        base_dir = "output"
+
+        # Create the base output directory if it doesn't exist
+        os.makedirs(base_dir, exist_ok=True)
+        merged_dir = os.path.join(base_dir, "merged")
+        os.makedirs(merged_dir, exist_ok=True)
+        # Create lvl1 to lvl5 folders and their subfolders
+        for i in range(0, 6):
+            level_dir = os.path.join(base_dir, f"lvl{i}")
+            os.makedirs(level_dir, exist_ok=True)
+
+            # Create subfolders lvlXdoc and lvlXpdf
+            doc_folder = os.path.join(level_dir, f"lvl{i}doc")
+            pdf_folder = os.path.join(level_dir, f"lvl{i}pdf")
+            os.makedirs(doc_folder, exist_ok=True)
+            os.makedirs(pdf_folder, exist_ok=True)
+
     def docxWriter(self):
-        
+        self.createDir()
         self.docxWriterLoop(self.__lvl0Start, self.__lvl0End, 0, self.__totalLvl0)
         self.docxWriterLoop(self.__lvl1Start, self.__lvl1End, 1, self.__totalLvl1)
         self.docxWriterLoop(self.__lvl2Start, self.__lvl2End, 2, self.__totalLvl2)
